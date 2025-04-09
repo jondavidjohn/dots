@@ -1,0 +1,13 @@
+name: hashicorp/atlas
+root: ~/Code/hashicorp/atlas
+pre_window: nvm use
+windows:
+  - editor:
+      panes:
+        - editor: nvim -c "Telescope find_files"
+  - services:
+      layout: tiled
+      panes:
+        - frontend: cd frontend/atlas && npx yarn && npx yarn start
+        - backend: syrup stack up
+        - console: bundle

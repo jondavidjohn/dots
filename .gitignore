@@ -1,0 +1,96 @@
+ # Failed patches
+*.rej
+.*.rej
+
+# Emacs backup and compiled files
+.*~
+*~
+.~/*
+.elc
+.\#*
+\#*\#
+.\#*\#
+
+# OS X files
+.DS_Store
+
+## Thumbnails
+._*
+
+## Files that might appear on external disk
+.Spotlight-V100
+.Trashes
+
+# Eclipse
+.project
+.buildpath
+.settings/
+
+# TextMate
+*.tmproj
+*.tmproject
+tmtags
+
+# Mercurial
+/.hg/*
+*/.hg/*
+.hgignore
+
+# Subversion
+.svn/
+
+# SASS
+
+*.scssc
+
+# Kohana
+application/cache/*
+application/logs/*
+
+# Python
+*.pyc
+*.pyo
+pip-log.txt
+
+# C/C++
+## Compiled Object files
+*.slo
+*.lo
+*.o
+
+## Compiled Dynamic libraries
+*.so
+
+## Compiled Static libraries
+*.lai
+*.la
+*.a
+
+## Vim files
+*.swp
+*.swo
+
+## SublimeText Project Files
+*sublime-*
+
+## SublimeText Project Files
+*.sublime-*
+
+.lvimrc
+
+.agignore
+jon-scripts/*
+
+.config/yarn
+.config/configstore
+.config/rclone
+.config/karabiner/automatic_backups
+.config/com.corsair
+.config/exercism
+.config/iterm2
+.config/op
+.config/wireshark
+.config/.tmuxinator/cardctlg/
+.config/.tmuxinator/hashicorp/
+.config/AWS*
+.jenv

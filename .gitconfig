@@ -1,0 +1,72 @@
+[user]
+	email = me@jondavidjohn.com
+	name = Jonathan Johnson
+[push]
+	default = current
+[branch]
+	autosetupmerge = true
+	autosetuprebase = always
+[alias]
+	aa = add --all
+	attach = "!f() { remote=${1-origin}; git branch --set-upstream-to=\"${remote}/$(git rev-parse --abbrev-ref HEAD)\"; }; f"
+	b = branch
+	catchup  = !(git co main && git pull && git co - && git merge -)
+	check = diff --check
+	ci = commit -v
+	cia = commit -v -a
+	co = checkout
+	cp = cherry-pick
+	ctags = !.git/hooks/ctags
+	d = diff
+	diffb = "!git diff `git fork`.."
+	diffc = diff --cached
+	diffw = diff --color-words='[^[:space:]]|([[:alnum:]]|UTF_8_GUARD)+'
+	fork = "!f() { parent=${1-main}; git merge-base HEAD ${parent}; }; f"
+	incoming = !(git fetch --quiet && git log --pretty=format:'%Cred%h%Creset -%C(yellow)%d%Creset %s %Cgreen%cr %C(bold blue)%an%Creset' ..@{u})
+	l = log
+	lg = log --graph --first-parent --pretty=format:'%Cred%h%Creset -%C(yellow)%d%Creset %s %Cgreen%cr %C(bold blue)%an%Creset' --abbrev-commit --date=relative
+	lgb =  "!git lg `git fork`.."
+	ll = log -p
+	llm = log -p main..
+	lm = log main..
+	outgoing = !(git fetch --quiet && git log --pretty=format:'%Cred%h%Creset -%C(yellow)%d%Creset %s %Cgreen%cr %C(bold blue)%an%Creset' @{u}..)
+	pullmerge = pull --no-rebase
+	pusht = push --follow-tags
+	ready = "!f() { target=$(git rev-parse @{u} 2> /dev/null); target=${target:-main}; git rebase -i ${target}; }; f"
+	st = status
+	subup = !(git submodule sync && git submodule update --init --recursive)
+	typo = !git commit --no-edit --amend
+	unstage = reset HEAD .
+# prunemerged = !git branch --merged | egrep -v "(^\*|main)" | xargs git branch -d
+[core]
+	editor = nvim
+	excludesfile = ~/.gitignore
+[color]
+	branch = auto
+	diff = auto
+	status = auto
+[diff]
+	tool = diffmerge
+[merge]
+	conflictstyle = diff3
+	tool = diffmerge
+[rerere]
+	enabled = false
+[github]
+	user = jondavidjohn
+[mergetool "diffmerge"]
+	cmd = diffmerge --merge\n--result=$MERGED $LOCAL $BASE $REMOTE
+	trustExitCode = true
+[mergetool]
+	keepBackup = false
+[difftool "diffmerge"]
+	cmd = diffmerge $LOCAL $REMOTE
+[init]
+	templatedir = ~/.git_template
+	defaultBranch = main
+[credential]
+	helper = osxkeychain
+[diff "sopsdiffer"]
+	textconv = sops -d
+[url "ssh://git@github.com/"]
+	insteadOf = https://github.com/
