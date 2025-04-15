@@ -8,6 +8,6 @@ windows:
   - services:
       layout: tiled
       panes:
-        - frontend: cd frontend/atlas && npx yarn && npx yarn start
+        - frontend: cd frontend/atlas && pnpm yarn && pnpm start
         - backend: syrup stack up
         - console: bundle

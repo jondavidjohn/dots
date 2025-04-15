@@ -82,9 +82,6 @@ eval "$(rbenv init -)"
 
 export PATH="/opt/homebrew/opt/libpq/bin:$PATH"
 
-[[ -s "/Users/jjohnson/.gvm/scripts/gvm" ]] && source "/Users/jjohnson/.gvm/scripts/gvm"
-
-
 # Zoxide init
 eval "$(zoxide init zsh --cmd cd)"
 
@@ -107,3 +104,5 @@ if type rg &> /dev/null; then
 fi
 
 source $HOME/.zsh_secrets
+
+[[ -s "/Users/jon/.gvm/scripts/gvm" ]] && source "/Users/jon/.gvm/scripts/gvm"

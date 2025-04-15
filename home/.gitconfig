@@ -62,7 +62,6 @@
 [difftool "diffmerge"]
 	cmd = diffmerge $LOCAL $REMOTE
 [init]
-	templatedir = ~/.git_template
 	defaultBranch = main
 [credential]
 	helper = osxkeychain
