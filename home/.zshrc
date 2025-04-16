@@ -1,8 +1,6 @@
 export EDITOR=nvim
 ulimit -n 10000
 
-ssh-add
-
 # Emacs mode for a more bash like experience
 bindkey -e
 

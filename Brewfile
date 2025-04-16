@@ -21,6 +21,7 @@ brew 'postgresql@16'
 brew 'cmake'
 brew 'tmuxinator'
 brew 'tpm'
+brew 'yaml-language-server'
 
 cask '1password'
 cask 'alfred'
