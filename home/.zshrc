@@ -4,6 +4,9 @@ ulimit -n 10000
 # Emacs mode for a more bash like experience
 bindkey -e
 
+# Really zsh? Really?
+bindkey "^[[3~" delete-char
+
 # Stop underlining directories
 (( ${+ZSH_HIGHLIGHT_STYLES} )) || typeset -A ZSH_HIGHLIGHT_STYLES
 ZSH_HIGHLIGHT_STYLES[path]=none

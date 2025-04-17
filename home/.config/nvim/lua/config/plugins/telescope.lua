@@ -17,6 +17,10 @@ return {
       file_ignore_patterns = { '_test', '_spec', 'db/', 'sorbet/' }
     }
 
+    vim.keymap.set('n', '<leader>ka', function ()
+      require('telescope.builtin').find_files()
+    end)
+
     vim.keymap.set('n', '<leader>kk', function ()
       require('telescope.builtin').find_files(opts)
     end)

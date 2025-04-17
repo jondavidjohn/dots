@@ -18,13 +18,27 @@ return {
       local caps = require('blink.cmp').get_lsp_capabilities()
 
       require('lspconfig').lua_ls.setup({ capabilities = caps })
-      require('lspconfig').ruby_lsp.setup({ capabilities = caps })
       require('lspconfig').solargraph.setup({ capabilities = caps })
       require('lspconfig').gopls.setup({ capabilities = caps })
       require('lspconfig').yamlls.setup({ capabilities = caps })
 
+      local function sorbet_root_pattern(...)
+        local patterns = { "sorbet/config" }
+        return require("lspconfig.util").root_pattern(unpack(patterns))(...)
+      end
+
+      require("lspconfig").sorbet.setup({
+        cmd = { "bundle", "exec", "srb", "tc", "--lsp" },
+        filetypes = { "ruby" },
+        capabilities = caps,
+        root_dir = function(fname)
+          return sorbet_root_pattern(fname)
+        end,
+      })
+
       require('lspconfig').rubocop.setup({
         cmd = { "bundle", "exec", "rubocop", "--lsp" },
+        filetypes = { "ruby" },
         capabilities = caps
       })
     end
