@@ -25,6 +25,7 @@ brew 'tmuxinator'
 brew 'tpm'
 brew 'watchman'
 
+brew 'solargraph'
 brew 'yaml-language-server'
 brew 'lua-language-server'
 
