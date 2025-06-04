@@ -9,17 +9,18 @@ return {
       extensions = {
         fzf = {}
       },
+      mappings = {
+        i = {
+          ["<C-q>"] = require('telescope.actions').smart_send_to_qflist + require('telescope.actions').open_qflist,
+        },
+      },
     })
 
     require('telescope').load_extension('fzf')
 
     local opts = {
-      file_ignore_patterns = { '_test', '_spec', 'db/', 'sorbet/' }
+      file_ignore_patterns = { 'sorbet/' }
     }
-
-    vim.keymap.set('n', '<leader>ka', function ()
-      require('telescope.builtin').find_files()
-    end)
 
     vim.keymap.set('n', '<leader>kk', function ()
       require('telescope.builtin').find_files(opts)
@@ -28,6 +29,14 @@ return {
     vim.keymap.set('n', '<leader>ks', function ()
       require('telescope.builtin').live_grep(opts)
     end)
+
+    vim.keymap.set('n', '<leader>kr', function()
+      require('telescope.builtin').lsp_references()
+    end, { noremap = true, silent = true })
+
+    vim.keymap.set('n', '<leader>kb', function()
+      require('telescope.builtin').buffers()
+    end, { noremap = true, silent = true })
 
     vim.keymap.set('n', '<leader>kg', require("telescope.builtin").git_files)
     vim.keymap.set('n', '<leader>km', require("telescope.builtin").treesitter)

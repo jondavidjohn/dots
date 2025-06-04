@@ -27,6 +27,8 @@ return {
 
       require('mini.trailspace').setup {}
       vim.keymap.set("n", "<leader>sw", MiniTrailspace.trim, { noremap = true })
+
+      -- require('mini.pairs').setup {}
     end
   },
 }

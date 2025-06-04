@@ -1,6 +1,8 @@
 name: hashicorp/atlas
 root: ~/Code/hashicorp/atlas
-pre_window: nvm use
+pre_window:
+  - nvm use
+  - artifactory_auth
 windows:
   - editor:
       panes:

@@ -107,3 +107,5 @@ fi
 source $HOME/.zsh_secrets
 
 [[ -s "/Users/jon/.gvm/scripts/gvm" ]] && source "/Users/jon/.gvm/scripts/gvm"
+
+autoload -Uz compinit && compinit
