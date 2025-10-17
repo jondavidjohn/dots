@@ -7,9 +7,12 @@ windows:
   - editor:
       panes:
         - editor: nvim -c "Telescope find_files"
+  - copilot:
+      panes:
+        - copilot: copilot
   - services:
       layout: tiled
       panes:
         - frontend: cd frontend/atlas && pnpm install && pnpm start
-        - backend: syrup stack up
+        - backend: syrup stack down && syrup stack up
         - console: bundle

@@ -60,6 +60,10 @@ alias pubkey='cat ~/.ssh/id_rsa.pub'
 alias mux='tmuxinator'
 alias be="bundle exec"
 
+copilot() {
+  command copilot --allow-all-tools --add-dir /tmp --deny-tool 'shell(git push)' "$@"
+}
+
 # Pathing
 eval "$(/opt/homebrew/bin/brew shellenv)"
 HOMEBREW_ROOT=/opt/homebrew
