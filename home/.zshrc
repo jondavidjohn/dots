@@ -48,7 +48,7 @@ zstyle ':fzf-tab:complete:cd:*' fzf-preview 'ls --color $realpath'
 
 # Aliases
 alias tree='tree --dirsfirst -C'
-alias ls='ls --color'
+alias ls='ls -G'
 alias ll='ls -lh'
 alias l='ll'
 alias lla='ll -A'
@@ -69,8 +69,25 @@ eval "$(/opt/homebrew/bin/brew shellenv)"
 HOMEBREW_ROOT=/opt/homebrew
 export HOMEBREW_NO_ANALYTICS=1
 
+# Lazy load NVM for faster shell startup
 export NVM_DIR="$HOME/.nvm"
-[ -s "$HOMEBREW_ROOT/opt/nvm/nvm.sh" ] && . "$HOMEBREW_ROOT/opt/nvm/nvm.sh"  # This loads nvm
+nvm() {
+  unset -f nvm
+  [ -s "$HOMEBREW_ROOT/opt/nvm/nvm.sh" ] && . "$HOMEBREW_ROOT/opt/nvm/nvm.sh"
+  nvm "$@"
+}
+
+node() {
+  unset -f node
+  [ -s "$HOMEBREW_ROOT/opt/nvm/nvm.sh" ] && . "$HOMEBREW_ROOT/opt/nvm/nvm.sh"
+  node "$@"
+}
+
+npm() {
+  unset -f npm
+  [ -s "$HOMEBREW_ROOT/opt/nvm/nvm.sh" ] && . "$HOMEBREW_ROOT/opt/nvm/nvm.sh"
+  npm "$@"
+}
 
 # more PATH adjustments
 export PATH=$PATH:$HOME/bin # user bin directory
@@ -108,8 +125,14 @@ if type rg &> /dev/null; then
     export FZF_DEFAULT_COMMAND='rg --files --hidden'
 fi
 
-source $HOME/.zsh_secrets
+source $HOME/.zsh_secrets 2>/dev/null
 
-[[ -s "/Users/jon/.gvm/scripts/gvm" ]] && source "/Users/jon/.gvm/scripts/gvm"
+[ -s "$HOME/.gvm/scripts/gvm" ] && source "$HOME/.gvm/scripts/gvm"
 
-autoload -Uz compinit && compinit
+# Optimize compinit - only check once per day
+autoload -Uz compinit
+if [ $(date +'%j') != $(stat -f '%Sm' -t '%j' ~/.zcompdump 2>/dev/null) ]; then
+  compinit
+else
+  compinit -C
+fi

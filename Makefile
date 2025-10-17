@@ -11,7 +11,7 @@ bundle:
 	brew bundle
 
 link:
-	$(STOW) --target $${HOME} -v home
+	stow --target $${HOME} -v home
 
 github:
 	gh auth login --git-protocol=ssh --hostname=github.com --web
