@@ -42,8 +42,7 @@ setopt hist_find_no_dups
 # Completion Styling
 zstyle ':completion:*' matcher-list 'm:{a-z}={A-Za-z}'
 zstyle ':completion:*' list-colors "${(s.:.)LS_COLORS}"
-zstyle ':completion:*' menu no
-zstyle ':completion:*:*:*:default' menu yes select search
+zstyle ':completion:*' menu yes select search
 zstyle ':fzf-tab:complete:cd:*' fzf-preview 'ls --color $realpath'
 
 # Aliases
@@ -55,7 +54,7 @@ alias lla='ll -A'
 alias la='lla'
 alias vi='vim'
 alias gtop='cd $(git rev-parse --show-toplevel || echo ".")'
-alias ag='ag --ignore=_site --ignore=log --ignore=vendor --ignore=tmp --smart-case --literal'
+alias ag='rg'
 alias pubkey='cat ~/.ssh/id_rsa.pub'
 alias mux='tmuxinator'
 alias be="bundle exec"
@@ -135,12 +134,6 @@ fi
 # Fzf integration
 eval "$(fzf --zsh)"
 
-#determines search program for fzf
-if type ag &> /dev/null; then
-    export FZF_DEFAULT_COMMAND='ag -p ~/.gitignore -g ""'
-fi
-
-#refer rg over ag
 if type rg &> /dev/null; then
     export FZF_DEFAULT_COMMAND='rg --files --hidden'
 fi

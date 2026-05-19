@@ -20,7 +20,7 @@ return {
         pattern = 'MiniFilesExplorerOpen',
         callback = function()
           set_mark('c', vim.fn.stdpath('config'), 'Config')
-          set_mark('w', vim.fn.getcwd, 'Working directory')
+          set_mark('w', vim.fn.getcwd(), 'Working directory')
           set_mark('~', '~', 'Home directory')
         end,
       })

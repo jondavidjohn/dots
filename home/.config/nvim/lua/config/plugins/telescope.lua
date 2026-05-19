@@ -6,13 +6,15 @@ return {
   },
   config = function ()
     require('telescope').setup({
+      defaults = {
+        mappings = {
+          i = {
+            ["<C-q>"] = require('telescope.actions').smart_send_to_qflist + require('telescope.actions').open_qflist,
+          },
+        },
+      },
       extensions = {
         fzf = {}
-      },
-      mappings = {
-        i = {
-          ["<C-q>"] = require('telescope.actions').smart_send_to_qflist + require('telescope.actions').open_qflist,
-        },
       },
     })
 
