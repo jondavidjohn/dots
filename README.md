@@ -1,23 +1,23 @@
 ## New Machine Setup
 
-1. Install git
+1. **Install git**
 
-```
-xcode-select --install
-```
+   ```
+   xcode-select --install
+   ```
 
-2. Clone this repo
+2. **Clone this repo**
 
-```
-git clone https://github.com/jondavidjohn/dots.git ~/Code/jondavidjohn/dots
-cd ~/Code/jondavidjohn/dots
-```
+   ```
+   git clone https://github.com/jondavidjohn/dots.git ~/Code/jondavidjohn/dots
+   cd ~/Code/jondavidjohn/dots
+   ```
 
-3. Run make
+3. **Run make**
 
-```
-make
-```
+   ```
+   make
+   ```
 
 4. **1Password** — Sign in to your account and install the
    [Chrome extension](https://chromewebstore.google.com/detail/1password-%E2%80%93-password-manag/aeblfdkhhhdcdjpifhhbdiojplfjncoa).
@@ -33,6 +33,7 @@ make
    System Settings → Privacy & Security → Accessibility.
 
 8. **GitHub SSH** — Once logged into GitHub in the browser, run:
+
    ```
    make github
    ```
