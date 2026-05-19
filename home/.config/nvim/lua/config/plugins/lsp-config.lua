@@ -4,11 +4,9 @@ return {
     dependencies = {
       {
         "folke/lazydev.nvim",
-        ft = "lua", -- only load on lua files
+        ft = "lua",
         opts = {
           library = {
-            -- See the configuration section for more details
-            -- Load luvit types when the `vim.uv` word is found
             { path = "${3rd}/luv/library", words = { "vim%.uv" } },
           },
         },
@@ -17,30 +15,25 @@ return {
     config = function ()
       local caps = require('blink.cmp').get_lsp_capabilities()
 
-      require('lspconfig').lua_ls.setup({ capabilities = caps })
-      require('lspconfig').solargraph.setup({ capabilities = caps })
-      require('lspconfig').gopls.setup({ capabilities = caps })
-      require('lspconfig').yamlls.setup({ capabilities = caps })
+      vim.lsp.config('lua_ls', { capabilities = caps })
+      vim.lsp.config('solargraph', { capabilities = caps })
+      vim.lsp.config('gopls', { capabilities = caps })
+      vim.lsp.config('yamlls', { capabilities = caps })
 
-      local function sorbet_root_pattern(...)
-        local patterns = { "sorbet/config" }
-        return require("lspconfig.util").root_pattern(unpack(patterns))(...)
-      end
-
-      require("lspconfig").sorbet.setup({
+      vim.lsp.config('sorbet', {
         cmd = { "bundle", "exec", "srb", "tc", "--lsp" },
         filetypes = { "ruby" },
         capabilities = caps,
-        root_dir = function(fname)
-          return sorbet_root_pattern(fname)
-        end,
+        root_markers = { "sorbet/config" },
       })
 
-      require('lspconfig').rubocop.setup({
+      vim.lsp.config('rubocop', {
         cmd = { "bundle", "exec", "rubocop", "--lsp" },
         filetypes = { "ruby" },
-        capabilities = caps
+        capabilities = caps,
       })
+
+      vim.lsp.enable({ 'lua_ls', 'solargraph', 'gopls', 'yamlls', 'sorbet', 'rubocop' })
     end
   }
 }

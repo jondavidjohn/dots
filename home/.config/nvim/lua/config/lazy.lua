@@ -24,11 +24,6 @@ vim.g.maplocalleader = "\\"
 -- Setup lazy.nvim
 require("lazy").setup({
   spec = {
-    {
-      "vhyrro/luarocks.nvim",
-      priority = 10000,
-      config = true,
-    },
     { import = "config.plugins" },
   },
 })
