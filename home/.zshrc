@@ -101,10 +101,6 @@ npm() {
 }
 
 copilot() {
-  if ! whence -p copilot >/dev/null; then
-    load_default_nvm || return 1
-  fi
-
   command copilot --allow-all-tools --add-dir /tmp --deny-tool 'shell(git push)' "$@"
 }
 

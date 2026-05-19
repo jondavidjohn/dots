@@ -24,6 +24,7 @@ brew 'tmuxinator'
 brew 'tpm'
 brew 'watchman'
 brew '1password-cli'
+brew 'copilot-cli'
 
 brew 'solargraph'
 brew 'yaml-language-server'
