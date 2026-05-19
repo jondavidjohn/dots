@@ -1,6 +1,6 @@
 .PHONY: default superprint brew bundle link alfred github
 
-default: superprint brew bundle link alfred github
+default: superprint brew bundle link alfred
 
 superprint:
 	sudo cp /etc/pam.d/sudo_local.template /etc/pam.d/sudo_local

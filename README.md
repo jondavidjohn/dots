@@ -19,7 +19,9 @@ cd ~/Code/jondavidjohn/dots
 make
 ```
 
-## Make Targets
+## Make Tasks
+
+All tasks below are executed in order by running bare `make`.
 
 ### `superprint`
 
@@ -46,3 +48,30 @@ git, etc.).
 
 Authenticates with GitHub via the `gh` CLI using SSH protocol and web-based
 login. This establishes SSH keys for push/pull access to repositories.
+
+### `alfred`
+
+Configures Alfred to use the synced preferences bundle from this repo. Reads
+or creates `~/Library/Application Support/Alfred/prefs.json` and sets the
+`current` path and sync folder to `~/.config/alfred`.
+
+## Post-Setup (Manual)
+
+Steps to complete by hand after `make` finishes:
+
+1. **1Password** — Sign in to your account and install the Chrome extension.
+
+2. **Disable Spotlight shortcuts** — System Settings → Keyboard → Keyboard
+   Shortcuts → Spotlight → uncheck "Show Spotlight search" (⌘Space) to free
+   it for Alfred.
+
+3. **Alfred** — Enter Powerpack license (stored in 1Password). Configure
+   appearance, set activation shortcut to ⌘Space, and enable clipboard history.
+
+4. **Karabiner-Elements** — Grant accessibility permissions when prompted in
+   System Settings → Privacy & Security → Accessibility.
+
+5. **GitHub SSH** — Once logged into GitHub in the browser, run:
+   ```
+   make github
+   ```
