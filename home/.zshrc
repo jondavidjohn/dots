@@ -59,11 +59,6 @@ alias ag='ag --ignore=_site --ignore=log --ignore=vendor --ignore=tmp --smart-ca
 alias pubkey='cat ~/.ssh/id_rsa.pub'
 alias mux='tmuxinator'
 alias be="bundle exec"
-
-copilot() {
-  command copilot --allow-all-tools --add-dir /tmp --deny-tool 'shell(git push)' "$@"
-}
-
 # Pathing
 eval "$(/opt/homebrew/bin/brew shellenv)"
 HOMEBREW_ROOT=/opt/homebrew
@@ -71,22 +66,47 @@ export HOMEBREW_NO_ANALYTICS=1
 
 # Lazy load NVM for faster shell startup
 export NVM_DIR="$HOME/.nvm"
+
+load_nvm() {
+  local nvm_script="$HOMEBREW_ROOT/opt/nvm/nvm.sh"
+
+  if [ ! -s "$nvm_script" ]; then
+    echo "nvm.sh not found at $nvm_script" >&2
+    return 1
+  fi
+
+  unset -f nvm node npm
+  . "$nvm_script"
+}
+
+load_default_nvm() {
+  load_nvm || return 1
+  nvm use --silent default >/dev/null || return 1
+  path=("$NVM_BIN" ${path:#$NVM_BIN})
+  rehash
+}
+
 nvm() {
-  unset -f nvm
-  [ -s "$HOMEBREW_ROOT/opt/nvm/nvm.sh" ] && . "$HOMEBREW_ROOT/opt/nvm/nvm.sh"
+  load_nvm || return 1
   nvm "$@"
 }
 
 node() {
-  unset -f node
-  [ -s "$HOMEBREW_ROOT/opt/nvm/nvm.sh" ] && . "$HOMEBREW_ROOT/opt/nvm/nvm.sh"
-  node "$@"
+  load_default_nvm || return 1
+  command node "$@"
 }
 
 npm() {
-  unset -f npm
-  [ -s "$HOMEBREW_ROOT/opt/nvm/nvm.sh" ] && . "$HOMEBREW_ROOT/opt/nvm/nvm.sh"
-  npm "$@"
+  load_default_nvm || return 1
+  command npm "$@"
+}
+
+copilot() {
+  if ! whence -p copilot >/dev/null; then
+    load_default_nvm || return 1
+  fi
+
+  command copilot --allow-all-tools --add-dir /tmp --deny-tool 'shell(git push)' "$@"
 }
 
 # more PATH adjustments
