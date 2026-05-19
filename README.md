@@ -21,8 +21,6 @@ make
 
 ## Make Tasks
 
-All tasks below are executed in order by running bare `make`.
-
 ### `superprint`
 
 Enables Touch ID for sudo authentication. Copies the system-provided
@@ -59,7 +57,8 @@ or creates `~/Library/Application Support/Alfred/prefs.json` and sets the
 
 Steps to complete by hand after `make` finishes:
 
-1. **1Password** — Sign in to your account and install the Chrome extension.
+1. **1Password** — Sign in to your account and install the
+   [Chrome extension](https://chromewebstore.google.com/detail/1password-%E2%80%93-password-manag/aeblfdkhhhdcdjpifhhbdiojplfjncoa).
 
 2. **Disable Spotlight shortcuts** — System Settings → Keyboard → Keyboard
    Shortcuts → Spotlight → uncheck "Show Spotlight search" (⌘Space) to free
