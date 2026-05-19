@@ -1,4 +1,6 @@
-.PHONY: superprint brew bundle link github
+.PHONY: default superprint brew bundle link github
+
+default: superprint brew bundle link github
 
 superprint:
 	sudo cp /etc/pam.d/sudo_local.template /etc/pam.d/sudo_local
@@ -8,12 +10,10 @@ brew:
 	/bin/bash -c "$$(curl -fsSL https://raw.githubusercontent.com/Homebrew/install/HEAD/install.sh)"
 
 bundle:
-	brew bundle
+	/opt/homebrew/bin/brew bundle
 
 link:
-	stow --target $${HOME} -v home
+	/opt/homebrew/bin/stow --target $${HOME} -v home
 
 github:
-	gh auth login --git-protocol=ssh --hostname=github.com --web
-
-default: superprint brew bundle link github
+	/opt/homebrew/bin/gh auth login --git-protocol=ssh --hostname=github.com --web
