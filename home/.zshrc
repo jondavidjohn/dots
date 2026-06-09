@@ -145,3 +145,6 @@ if [ $(date +'%j') != $(stat -f '%Sm' -t '%j' ~/.zcompdump 2>/dev/null) ]; then
 else
   compinit -C
 fi
+
+# Created by `pipx` on 2026-05-26 15:13:45
+export PATH="$PATH:/Users/jon/.local/bin"
