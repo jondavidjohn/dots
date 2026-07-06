@@ -93,20 +93,22 @@ and scan-friendly `--csv` (or `--json | jq` when you need structure):
 # Sanity check — is Jira authenticated?
 acli jira auth status
 
-# Everything assigned to me that isn't done
+# Everything assigned to me that isn't done (recency via JQL ORDER BY,
+# NOT via --fields; acli display fields are limited to
+# issuetype,key,assignee,priority,status,summary)
 acli jira workitem search \
-  --jql "assignee = currentUser() AND resolution = Unresolved" \
-  --fields "key,summary,status,updated" --csv
+  --jql "assignee = currentUser() AND resolution = Unresolved ORDER BY updated DESC" \
+  --fields "key,status,summary" --csv
 
 # In-progress work (closest to needing attention)
 acli jira workitem search \
-  --jql "assignee = currentUser() AND statusCategory = 'In Progress'" \
-  --fields "key,summary,status,updated" --csv
+  --jql "assignee = currentUser() AND statusCategory = 'In Progress' ORDER BY updated DESC" \
+  --fields "key,status,summary" --csv
 
 # Current sprint scope
 acli jira workitem search \
   --jql "assignee = currentUser() AND sprint in openSprints()" \
-  --fields "key,summary,status" --csv
+  --fields "key,status,summary" --csv
 
 # Detail on one ticket (exclude the noisy ADF description)
 acli jira workitem view <KEY> --fields "summary,status,assignee"
@@ -153,15 +155,20 @@ page bodies speculatively. Defer to the `acli` skill for anything deeper.
 
 ### 4. GitHub (gh)
 
-Use `gh` for PR state to judge what is close to closing:
+Use `gh` for PR state to judge what is close to closing. Note `gh pr list`
+only sees the current repo — use `gh search prs` to span all your repos, and
+scope by recency (open PRs can be years stale):
 
 ```bash
-# My open PRs and their review/CI state
-gh pr list --author "@me" --state open \
-  --json number,title,repository,reviewDecision,isDraft,updatedAt
+# My recently-active open PRs across all repos, with review/CI state
+gh search prs --author=@me --state=open --sort=updated --updated=">$(date -v-21d +%F)" \
+  --json number,title,repository,url --limit 30
+
+# Review/CI detail for a specific PR
+gh pr view <number> -R <owner/repo> --json reviewDecision,statusCheckRollup,isDraft,mergeable
 
 # PRs awaiting my review
-gh search prs --review-requested=@me --state=open
+gh search prs --review-requested=@me --state=open --sort=updated
 ```
 
 Cross-reference PR numbers with `session_refs.ref_value` (ref_type='pr') and
@@ -237,10 +244,13 @@ last_compiled: 2026-07-06T12:30:00Z
    When a thread references a Confluence page (design doc, RFC, runbook),
    pull that page's metadata for extra context — but only then.
 3. **Classify** each thread into exactly one bucket (below).
-4. **Prioritize** within buckets using the heuristics below.
-5. **Brief.** Produce the output format below. Be concise and specific:
+4. **Reconcile.** Compare each thread's *code reality* (PR/branch/session
+   state) against its *Jira status*. Flag every divergence per the Status
+   reconciliation rules below — this is a first-class output, not an aside.
+5. **Prioritize** within buckets using the heuristics below.
+6. **Brief.** Produce the output format below. Be concise and specific:
    name the Jira key, PR number, repo/branch, and the concrete next step.
-6. **Persist.** Rewrite the digest: merge today's findings into the prior,
+7. **Persist.** Rewrite the digest: merge today's findings into the prior,
    **prune** resolved/stale threads per the rules above, and update
    `last_compiled`. The digest should come out of each run *smaller and
    sharper*, not longer.
@@ -257,14 +267,54 @@ last_compiled: 2026-07-06T12:30:00Z
 - **🟢 Needs starting** — assigned/sprint tickets with no session, branch, or
   PR yet. These are commitments not yet begun.
 
+### Status reconciliation (Jira ↔ code)
+
+A core job of this agent is catching **drift between what the code says and
+what Jira says.** Work often moves forward in GitHub while the ticket is left
+behind, so tickets misrepresent reality. On every run, cross-check each
+thread and surface the mismatches explicitly. Determine "code reality" from
+PR state (`gh pr view`: `reviewDecision`, `state`/`mergeStateStatus`,
+`merged`, `closed`) and session activity; compare it to the Jira
+status/`statusCategory`.
+
+Flag these patterns (report the ticket, the PR, the observed vs. expected
+status, and the one-line fix):
+
+- **Code ahead, ticket behind — needs review:** an open PR exists (esp.
+  `REVIEW_REQUIRED`/CI green) but the ticket is still `To Do`/`Open`/`In
+  Development`. → *Move the ticket to In Review / In Progress.*
+- **Merged but not closed:** PR is **merged** (or branch clearly landed) but
+  the ticket is not `Done`/`Closed`/Resolved. → *Close the ticket.* This is
+  the most common and highest-value catch.
+- **PR closed unmerged, ticket still active:** PR was **closed without
+  merging** but the ticket stays `In Progress`. → *Reopen/redo the work, or
+  close the ticket as won't-do — decide which.*
+- **Ticket done, work missing:** ticket is `Done`/`Closed` but there is no
+  merged PR and/or the last session left unfinished `next_steps`. →
+  *Reopen the ticket or confirm the work actually shipped.*
+- **In Progress but cold:** ticket is `In Progress` yet has no PR, no branch,
+  and no session activity in the window. → *Either start it or move it back
+  to the backlog; it is masquerading as active work.*
+- **Resolution/status contradiction:** ticket status reads `Closed` but it
+  still returns under `resolution = Unresolved` (or vice versa). → *Fix the
+  resolution field.*
+- **Assignee/reviewer stall:** PR waiting on review for many days while the
+  ticket claims active progress. → *Nudge a reviewer; the ticket overstates
+  momentum.*
+
+Be conservative: only assert a mismatch when you have read both sides. If you
+are inferring the code side (e.g. a branch name without a confirmed PR), say
+so rather than stating a false discrepancy. These are usually **cheap wins** —
+a single Jira transition closes the gap — so rank them accordingly.
+
 ### Prioritization heuristics
 
 - Weight by: proximity to done > sprint/priority in Jira > staleness
   (older dangling work risks being forgotten) > blast radius.
 - Surface **stale-but-important** items explicitly: a thread untouched for
   many days that is still Unresolved in Jira is a forgetting risk — flag it.
-- If something appears finished in sessions/PRs but the Jira ticket is still
-  open (or vice versa), call out the **mismatch** — these are cheap wins.
+- **Status mismatches are cheap wins** — a lone Jira transition resolves them;
+  rank them high despite the small effort.
 
 ## Output format
 
@@ -274,6 +324,13 @@ closing"), then the four buckets as short lists. For each item:
     [<Jira KEY or —>] <short thread name>  ·  <repo/branch or PR#>
       → next: <the single most useful next action>
       (last touched <relative time>; <status/blocker if any>)
+
+After the buckets, add a **⚠️ Status mismatches** section listing every
+Jira↔code divergence found during Reconcile (omit the section only if there
+are genuinely none). For each:
+
+    [<Jira KEY>] <what code says> vs Jira "<status>"  ·  <PR#>
+      → fix: <the single Jira transition or action that closes the gap>
 
 Keep it skimmable. End with a **"If you only do one thing"** recommendation.
 
