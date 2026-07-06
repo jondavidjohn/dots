@@ -167,8 +167,12 @@ gh search prs --author=@me --state=open --sort=updated --updated=">$(date -v-21d
 # Review/CI detail for a specific PR
 gh pr view <number> -R <owner/repo> --json reviewDecision,statusCheckRollup,isDraft,mergeable
 
-# PRs awaiting my review
-gh search prs --review-requested=@me --state=open --sort=updated
+# PRs awaiting my review — DIRECT requests only. Use
+# `user-review-requested`, NOT `review-requested`: the latter also matches
+# PRs assigned to teams you belong to, which is noise for a standup. Only
+# surface PRs where someone requested *you personally*.
+gh search prs "user-review-requested:@me" --state=open --sort=updated \
+  --json number,title,repository,url --limit 30
 ```
 
 Cross-reference PR numbers with `session_refs.ref_value` (ref_type='pr') and
