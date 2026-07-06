@@ -1,3 +1,5 @@
+tap 'atlassian/homebrew-acli'
+
 brew 'zsh'
 brew 'gh'
 brew 'jq'
@@ -25,6 +27,7 @@ brew 'tpm'
 brew 'watchman'
 brew '1password-cli'
 brew 'copilot-cli'
+brew 'acli'
 
 brew 'solargraph'
 brew 'yaml-language-server'
