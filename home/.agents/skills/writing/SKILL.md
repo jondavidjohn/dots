@@ -14,3 +14,4 @@ descriptions, release notes, or documentation, or other writing intesnive tasks 
 - Focus on the **why** of the work, not the **how**. The code speaks to the how.
 - Be concise. Avoid filler phrases, handwavey jargon, and unnecessary qualifiers.
 - Eliminate statements that are imprecise and unqalified, and only exist to make something "sound" smart.
+- If you're writing pull request descriptions, trust the reviewer to be able to read the code and tests. You shouldn't need to tell the reviewer how you did something unless it is specifically odd or not clear.
