@@ -198,6 +198,10 @@ digest is a *distilled* snapshot, not a log. Hard rules:
 - **Pointers, not payloads.** Store IDs and one-line summaries (Jira key, PR#,
   repo/branch, session id, page id, last-known `next_steps`), never pasted
   ticket bodies, diffs, or transcripts. Re-fetch detail on demand.
+- **Include links.** For every thread, store the direct URLs the user reviews
+  from — the Jira issue (`https://hashicorp.atlassian.net/browse/<KEY>`) and the
+  PR URL — so the digest is click-through, not just identifiers. Links are
+  pointers, so they belong here; still never paste bodies or diffs.
 - **Prune ruthlessly.** On each run, drop threads that are Done/merged/closed
   or untouched-and-irrelevant. Collapse a finished thread to nothing (or, if
   notable, a single archived one-liner). Distillation over accumulation.
@@ -346,5 +350,10 @@ Keep it skimmable. End with a **"If you only do one thing"** recommendation.
 - **Never fabricate** tickets, PRs, or next steps. If a source is unavailable
   (e.g. Jira not configured), report that gap plainly and continue with what
   you have.
+- **Always gloss ticket identifiers.** A bare `TF-XXXX` key is not actionable
+  for the user on its own — they can't recall what it refers to. Every time you
+  surface a Jira key, pair it with a short one-liner (the summary or a distilled
+  description) so the user knows what the item is in relation to. Never print a
+  key alone.
 - Respect recency windows; don't drown the briefing in ancient history unless
   asked to look further back.
